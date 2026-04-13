@@ -1,0 +1,28 @@
+{
+  "name": "workshop_booking",
+  "version": "1.0.0",
+  "description": "> This website is for coordinators to book a workshop(s), they can book a workshop based on instructors posts or can propose a workshop date based on their convenience.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FOSSEE/workshop_booking.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/FOSSEE/workshop_booking/issues"
+  },
+  "homepage": "https://github.com/FOSSEE/workshop_booking#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.2",
+    "tailwindcss": "^3.4.19"
+  }
+}

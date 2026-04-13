@@ -1,0 +1,63 @@
+{% extends 'workshop_app/base.html' %}
+
+{% block title %}
+    Register - FOSSEE Workshops
+{% endblock %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 w-full max-w-3xl mx-auto relative z-10 perspective-[2000px]">
+    
+    <!-- Title Section -->
+    <div class="sm:mx-auto sm:w-full sm:max-w-2xl mb-8 text-center">
+        <h2 class="mt-6 text-center text-4xl font-extrabold text-slate-900 tracking-tight">
+            Coordinator <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-secondary-600">Registration</span>
+        </h2>
+        <p class="mt-3 text-center mb-6 text-sm text-slate-500 font-medium">
+            Join the FOSSEE Workshops platform and organize events at your institute.
+        </p>
+    </div>
+
+    <!-- Elevated Card -->
+    <div class="bg-white py-10 px-6 shadow-soft hover:shadow-hover-soft rounded-xl border border-slate-100 sm:px-12 w-full transition-all duration-300 transform hover:-translate-y-1">
+        
+        <!-- Target generic Django form outputs with standard Tailwind UI variants -->
+        <form action="" method="post" class="space-y-6 
+            [&_th]:text-left [&_th]:align-top [&_th]:pt-3 [&_th]:min-w-[150px] [&_th]:text-sm [&_th]:font-semibold [&_th]:text-slate-700 [&_th]:pr-4
+            [&_td]:pb-5 [&_td]:w-full
+            [&_input[type=text]]:appearance-none [&_input[type=text]]:block [&_input[type=text]]:w-full [&_input[type=text]]:px-4 [&_input[type=text]]:py-3 [&_input[type=text]]:border [&_input[type=text]]:border-slate-200 [&_input[type=text]]:rounded-lg [&_input[type=text]]:shadow-sm [&_input[type=text]]:focus:outline-none [&_input[type=text]]:focus:ring-2 [&_input[type=text]]:focus:ring-primary-500 [&_input[type=text]]:focus:border-primary-500 [&_input[type=text]]:transition-all [&_input[type=text]]:duration-200 [&_input[type=text]]:font-medium
+            [&_input[type=password]]:appearance-none [&_input[type=password]]:block [&_input[type=password]]:w-full [&_input[type=password]]:px-4 [&_input[type=password]]:py-3 [&_input[type=password]]:border [&_input[type=password]]:border-slate-200 [&_input[type=password]]:rounded-lg [&_input[type=password]]:shadow-sm [&_input[type=password]]:focus:outline-none [&_input[type=password]]:focus:ring-2 [&_input[type=password]]:focus:ring-primary-500 [&_input[type=password]]:focus:border-primary-500 [&_input[type=password]]:transition-all [&_input[type=password]]:duration-200 [&_input[type=password]]:font-medium
+            [&_input[type=email]]:appearance-none [&_input[type=email]]:block [&_input[type=email]]:w-full [&_input[type=email]]:px-4 [&_input[type=email]]:py-3 [&_input[type=email]]:border [&_input[type=email]]:border-slate-200 [&_input[type=email]]:rounded-lg [&_input[type=email]]:shadow-sm [&_input[type=email]]:focus:outline-none [&_input[type=email]]:focus:ring-2 [&_input[type=email]]:focus:ring-primary-500 [&_input[type=email]]:focus:border-primary-500 [&_input[type=email]]:transition-all [&_input[type=email]]:duration-200 [&_input[type=email]]:font-medium
+            [&_select]:block [&_select]:w-full [&_select]:px-4 [&_select]:py-3 [&_select]:border [&_select]:border-slate-200 [&_select]:rounded-lg [&_select]:shadow-sm [&_select]:focus:outline-none [&_select]:focus:ring-2 [&_select]:focus:ring-primary-500 [&_select]:focus:border-primary-500 [&_select]:transition-all [&_select]:duration-200 [&_select]:font-medium [&_select]:bg-white
+            [&_textarea]:block [&_textarea]:w-full [&_textarea]:px-4 [&_textarea]:py-3 [&_textarea]:border [&_textarea]:border-slate-200 [&_textarea]:rounded-lg [&_textarea]:shadow-sm [&_textarea]:focus:outline-none [&_textarea]:focus:ring-2 [&_textarea]:focus:ring-primary-500 [&_textarea]:focus:border-primary-500 [&_textarea]:transition-all [&_textarea]:duration-200
+            [&_.helptext]:block [&_.helptext]:text-xs [&_.helptext]:text-slate-500 [&_.helptext]:mt-2
+            [&_.errorlist]:text-red-500 [&_.errorlist]:text-sm [&_.errorlist]:font-medium [&_.errorlist]:mb-2 [&_.errorlist]:list-none [&_.errorlist]:p-0
+        ">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-md mb-6 shadow-sm">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="w-full">
+                <!-- Appending asterisks with CSS via pseudo-element is a clean way to keep required fields styled without JS -->
+                <style>
+                    form th label:after { content: "*"; color: #ef4444; margin-left: 0.25rem; }
+                </style>
+                <table class="w-full border-collapse">
+                    {{ form.as_table }}
+                </table>
+            </div>
+
+            <!-- Action Button -->
+            <div class="pt-6 border-t border-slate-100 flex justify-end">
+                <button type="submit" 
+                    class="w-full sm:w-auto flex justify-center py-3 px-8 border border-transparent rounded-lg shadow-btn text-sm font-bold text-white bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transform hover:-translate-y-0.5 transition-all duration-200 text-lg tracking-wide">
+                    Submit Registration
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

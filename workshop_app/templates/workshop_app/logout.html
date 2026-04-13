@@ -1,0 +1,32 @@
+{% extends 'workshop_app/base.html' %}
+
+{% block title %} Logged Out - FOSSEE Workshops {% endblock %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center py-16 px-4 sm:px-6 lg:px-8 w-full max-w-lg mx-auto relative z-10 perspective-[2000px]">
+    
+    <div class="bg-white p-10 shadow-soft hover:shadow-hover-soft rounded-2xl border border-slate-100 w-full transition-all duration-300 transform hover:-translate-y-1 text-center">
+        <!-- Success Graphic -->
+        <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-slate-100 mb-6 border-4 border-white shadow-sm ring-1 ring-slate-50">
+            <span class="material-icons text-slate-500 text-4xl">power_settings_new</span>
+        </div>
+        
+        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight mb-4">
+            Logged Out <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-secondary-600">Successfully</span>
+        </h2>
+        
+        <p class="text-slate-500 font-medium mb-8 text-sm">
+            You have been securely signed out of your account. Thank you for using FOSSEE Workshops.
+        </p>
+
+        <div class="flex flex-col space-y-3">
+            <a href="{% url 'workshop_app:login' %}" class="inline-flex justify-center items-center py-3 px-8 rounded-lg shadow-btn text-sm font-bold text-white bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 transform hover:-translate-y-0.5 transition-all w-full">
+                <span class="material-icons text-sm mr-2">login</span> Log In Again
+            </a>
+            <a href="/" class="inline-flex justify-center py-3 px-4 border border-slate-200 rounded-lg text-sm font-bold text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-colors shadow-sm w-full">
+                Return to FOSSEE Home
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

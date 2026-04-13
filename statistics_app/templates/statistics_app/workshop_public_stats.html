@@ -1,0 +1,308 @@
+{% extends 'workshop_app/base.html' %}
+
+{% block title %} Statistics - FOSSEE Workshops {% endblock %}
+
+{% block extra-dependencies %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="flex flex-col lg:flex-row gap-8 w-full perspective-[2000px]">
+    
+    <!-- Sidebar Filters (Elevated Card) -->
+    <div class="w-full lg:w-1/4">
+        <form method="GET" class="sticky top-24">
+            <div class="bg-white rounded-xl shadow-soft hover:shadow-hover-soft border border-slate-100 overflow-hidden transition-all duration-300 transform hover:-translate-y-1">
+                <div class="px-6 py-5 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                    <h3 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-secondary-600 flex items-center">
+                        <span class="material-icons mr-2 text-primary-600">filter_list</span>
+                        Filters
+                    </h3>
+                    <a href="{% url 'statistics_app:public' %}" class="flex items-center text-sm font-semibold text-slate-500 hover:text-red-500 transition-colors">
+                        <span class="material-icons text-sm mr-1">close</span> Clear
+                    </a>
+                </div>
+                
+                <div class="p-6 space-y-5
+                    [&_input]:appearance-none [&_input]:block [&_input]:w-full [&_input]:px-3 [&_input]:py-2 [&_input]:border [&_input]:border-slate-200 [&_input]:rounded-lg [&_input]:shadow-sm [&_input]:focus:outline-none [&_input]:focus:ring-2 [&_input]:focus:ring-primary-500 [&_input]:font-medium [&_input]:text-sm
+                    [&_select]:block [&_select]:w-full [&_select]:px-3 [&_select]:py-2 [&_select]:border [&_select]:border-slate-200 [&_select]:rounded-lg [&_select]:shadow-sm [&_select]:focus:outline-none [&_select]:focus:ring-2 [&_select]:focus:ring-primary-500 [&_select]:font-medium [&_select]:text-sm [&_select]:bg-white
+                ">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">From Date</label>
+                        {{form.from_date}}
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">To Date</label>
+                        {{form.to_date}}
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">Workshop Type</label>
+                        {{form.workshop_type}}
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">State</label>
+                        {{form.state}}
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">{{form.sort.help_text}}</label>
+                        {{form.sort}}
+                    </div>
+                    {% if request.user.is_authenticated %}
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">{{form.show_workshops.help_text}}</label>
+                        {{form.show_workshops}}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex flex-col sm:flex-row gap-3">
+                    <button type="submit" class="flex-1 flex justify-center items-center py-2 px-4 shadow-btn text-sm font-bold text-white bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 rounded-lg transform hover:-translate-y-0.5 transition-all outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                        <span class="material-icons text-sm mr-2">visibility</span> View
+                    </button>
+                    <button type="submit" name="download" value="download" class="flex-1 flex justify-center items-center py-2 px-4 bg-white border border-slate-200 text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-primary-600 rounded-lg shadow-sm transition-all focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                        <span class="material-icons text-sm mr-2">download</span> Export
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="w-full lg:w-3/4 flex flex-col space-y-6">
+        
+        <!-- Header Actions & Pagination Top -->
+        <div class="flex flex-col sm:flex-row justify-between items-center bg-white p-4 rounded-xl shadow-soft border border-slate-100">
+            <div class="w-full sm:w-auto mb-4 sm:mb-0 pagination-container">
+                {% include "statistics_app/paginator.html" %}
+            </div>
+            <div class="flex flex-wrap gap-3">
+                <button id="state_graph" class="flex items-center px-4 py-2 bg-indigo-50 text-primary-700 hover:bg-indigo-100 rounded-lg font-semibold text-sm transition-colors border border-indigo-100 shadow-sm">
+                    <span class="material-icons text-sm mr-2">bar_chart</span> State Chart
+                </button>
+                <button id="type_graph" class="flex items-center px-4 py-2 bg-violet-50 text-secondary-700 hover:bg-violet-100 rounded-lg font-semibold text-sm transition-colors border border-violet-100 shadow-sm">
+                    <span class="material-icons text-sm mr-2">pie_chart</span> Workshops Chart
+                </button>
+            </div>
+        </div>
+
+        <!-- Data Table Card -->
+        <div class="bg-white rounded-xl shadow-soft overflow-hidden border border-slate-100">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-200">
+                    <thead class="bg-slate-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Sr No.</th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Coordinator</th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Institute</th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Instructor</th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Workshop Name</th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-slate-100">
+                        {% csrf_token %}
+                        {% for workshop in objects %}
+                            <tr class="hover:bg-slate-50 transition-colors group">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 font-medium">
+                                    {{ forloop.counter0|add:objects.start_index }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-800">
+                                    {{ workshop.coordinator.get_full_name | capfirst }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                                    {{ workshop.coordinator.profile.institute | capfirst }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-700">
+                                    {{ workshop.instructor.get_full_name | capfirst }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-primary-600 font-bold">
+                                    {{ workshop.workshop_type.name }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 font-medium font-mono">
+                                    {{ workshop.date | date:"d M Y" }}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6" class="px-6 py-12 text-center text-slate-500 italic font-medium">
+                                    No workshops found matching the selected filters.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            {% if objects.has_other_pages %}
+            <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-center pagination-container">
+                {% include "statistics_app/paginator.html" %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Refactored Graph Modal -->
+<div id="dialog" title="Workshops Statistics" style="display:none;" class="p-6">
+    <div class="relative h-[400px] w-full">
+        <canvas id="myChart"></canvas>
+    </div>
+</div>
+
+<!-- Temporary quick styling for the Django paginator included via `statistics_app/paginator.html` since we don't have direct access to rewrite it here -->
+<style>
+    .pagination-container .pagination {
+        display: flex;
+        padding-left: 0;
+        list-style: none;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+    .pagination-container .page-item .page-link {
+        position: relative;
+        display: block;
+        padding: 0.5rem 0.75rem;
+        margin-left: -1px;
+        line-height: 1.25;
+        color: #4f46e5;
+        background-color: #fff;
+        border: 1px solid #e2e8f0;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+    .pagination-container .page-item.active .page-link {
+        z-index: 3;
+        color: #fff;
+        background-color: #4f46e5;
+        border-color: #4f46e5;
+    }
+    .pagination-container .page-item.disabled .page-link {
+        color: #94a3b8;
+        pointer-events: none;
+        background-color: #f8fafc;
+        border-color: #e2e8f0;
+    }
+    .pagination-container .page-item:first-child .page-link {
+        border-top-left-radius: 0.5rem;
+        border-bottom-left-radius: 0.5rem;
+    }
+    .pagination-container .page-item:last-child .page-link {
+        border-top-right-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
+    }
+    .pagination-container .page-link:hover {
+        z-index: 2;
+        color: #3730a3;
+        text-decoration: none;
+        background-color: #f8fafc;
+        border-color: #e2e8f0;
+    }
+    /* jQuery UI Dialog Tailwind Override */
+    .ui-widget-overlay { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px); }
+    .ui-dialog { border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); font-family: inherit; }
+    .ui-dialog .ui-dialog-titlebar { background: #f8fafc; border: none; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 800; padding: 1rem 1.5rem; border-top-left-radius: 12px; border-top-right-radius: 12px; }
+    .ui-button { border-radius: 6px; }
+</style>
+
+<script type="text/javascript">
+    var state_labels = {{ws_states|safe}};
+    var state_data = {{ws_count|safe}};
+    var type_labels = {{ws_type|safe}};
+    var type_data = {{ws_type_count|safe}};
+    var chart;
+    
+    $("#state_graph").on("click", function(e) {
+        e.preventDefault();
+        show_graph(state_labels, state_data, "State wise workshops");
+    });
+    
+    $("#type_graph").on("click", function(e) {
+        e.preventDefault();
+        show_graph(type_labels, type_data, "Type wise workshops");
+    });
+
+    function show_graph(labels, data, graph_name) {
+        var ctx = document.getElementById('myChart').getContext('2d');
+        if(chart) chart.destroy();
+        
+        // Brand color matching for Area Gradients (Reaviz Area Chart Aesthetic)
+        var bgGradient = ctx.createLinearGradient(0, 0, 0, 400);
+        bgGradient.addColorStop(0, 'rgba(124, 58, 237, 0.4)'); // Violet 600 at 40%
+        bgGradient.addColorStop(1, 'rgba(124, 58, 237, 0.0)'); // Fade to transparent
+        
+        chart = new Chart(ctx, {
+            type: 'line', // Reaviz Area component is a smooth line chart with fill
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    label: graph_name,
+                    backgroundColor: bgGradient,
+                    borderColor: '#7C3AED', // Violet 600
+                    borderWidth: 2,
+                    pointBackgroundColor: '#FFFFFF',
+                    pointBorderColor: '#7C3AED',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    fill: true,
+                    lineTension: 0.4, // Smooth interpolation
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{ 
+                        ticks: { beginAtZero: true, fontColor: '#9A9AAF' }, 
+                        gridLines: { color: 'rgba(126, 126, 143, 0.15)', zeroLineColor: 'rgba(126, 126, 143, 0.2)' } 
+                    }],
+                    xAxes: [{ 
+                        ticks: { fontColor: '#9A9AAF' }, 
+                        gridLines: { display: false } 
+                    }]
+                },
+                legend: { 
+                    labels: { fontColor: '#334155', fontStyle: 'bold' } 
+                },
+                tooltips: {
+                    backgroundColor: '#0F172A',
+                    titleFontColor: '#FFFFFF',
+                    bodyFontColor: '#CBD5E1',
+                    bodySpacing: 4,
+                    xPadding: 12,
+                    yPadding: 12,
+                    cornerRadius: 8,
+                }
+            }
+        });
+        
+        // Modal with the massive Reaviz UI Shadow
+        $("#dialog").dialog({
+            width: Math.min(950, $(window).width() - 40),
+            height: 600,
+            modal: true,
+            show: { effect: "slideDown", duration: 400 },
+            hide: { effect: "slideUp", duration: 300 },
+            classes: {
+                "ui-dialog": "custom-tailwind-dialog custom-reaviz-shadow"
+            }
+        });
+    }
+</script>
+<style>
+    /* Mimicking the Reaviz/Framer-Motion IncidentReportCard shadows */
+    .custom-reaviz-shadow {
+        box-shadow: 11px 21px 3px rgba(0,0,0,0.02),
+                    14px 27px 7px rgba(0,0,0,0.05),
+                    19px 38px 14px rgba(0,0,0,0.08),
+                    27px 54px 27px rgba(0,0,0,0.12),
+                    39px 78px 50px rgba(0,0,0,0.15) !important;
+        border-radius: 24px !important;
+        border: none !important;
+        padding-bottom: 24px;
+    }
+</style>
+{% endblock %}
