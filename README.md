@@ -1,93 +1,96 @@
-# **Workshop Booking**
-
-> This website is for coordinators to book a workshop(s), they can book a workshop based on instructors posts or can propose a workshop date based on their convenience.
-
-
-### Features
-* Statistics
-    1. Instructors Only
-        * Monthly Workshop Count
-        * Instructor/Coordinator Profile stats
-        * Upcoming Workshops
-        * View/Post comments on Coordinator's Profile
-    2. Open to All
-        * Workshops taken over Map of India
-        * Pie chart based on Total Workshops taken to Type of Workshops.
-
-* Workshop Related Features
-    > Instructors can Accept, Reject or Delete workshops based on their preference, also they can postpone a workshop based on coordinators request.
-
-__NOTE__: Check docs/Getting_Started.md for more info.
-
 <div align="center">
 
 <img src="workshop_booking_banner.png" width="100%" alt="Workshop Booking Banner">
 
-# 🗓️ Workshop Booking System
-### *Modernize. Coordinate. Accelerate.*
+# 🗓️ Workshop Booking & Management System
+### *Bridging the gap between Educational Expertise and Institutional Coordination.*
 
 [![Django](https://img.shields.io/badge/Django-3.0.7-092E20?style=for-the-badge&logo=django&logoColor=white)](https://www.djangoproject.com/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.19-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Python](https://img.shields.io/badge/Python-3.x-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Database](https://img.shields.io/badge/Database-SQLite/Postgres-blue?style=for-the-badge&logo=sqlite&logoColor=white)]()
+[![License](https://img.shields.io/badge/License-ISC-9333ea?style=for-the-badge)]()
 
-**A high-performance coordination platform built for instructors and coordinators to seamlessly manage educational workshops.**
+**Workshop Booking** is a premium coordination ecosystem designed for large-scale educational initiatives. It enables instructors to showcase expertise and coordinators to organize high-impact learning sessions with architectural precision.
 
-[Key Features](#-key-features) • [Tech Stack](#-tech-stack) • [Installation](#-getting-started) • [Visual Experience](#-visual-experience)
+---
+
+[📖 Overview](#-overview) • [🚀 Features](#-key-features) • [🏗️ Architecture](#%EF%B8%8F-architecture) • [🎨 Design System](#-design-system) • [⚙️ Setup](#-installation--getting-started) • [📊 Analytics](#-advanced-analytics)
+
+---
 
 </div>
 
----
+## 📖 Project Overview
 
-## ✨ Key Features
-
-### 👨‍🏫 For Instructors
-- **Dynamic Scheduling:** Post your availability and manage upcoming sessions effortlessly.
-- **Advanced Dashboard:** Real-time statistics including monthly workshop counts and performance tracking.
-- **Engagement Tools:** View and post comments on coordinator profiles to build strong partnerships.
-- **Workflow Management:** Accept, reject, or postpone requests with a single click.
-
-### 🤝 For Coordinators
-- **Intelligent Booking:** Book workshops based on instructor availability or propose custom dates.
-- **Centralized Proposal System:** Propose workshop dates that suit your organization's schedule.
-- **Interactive Profiles:** Manage your reputation and feedback within the community.
-
-### 📊 Open Analytics
-- **Geospatial Insights:** Track workshop distribution across the **Map of India**.
-- **Data Visualization:** Intuitive pie charts and bar graphs for workshop categories and total engagement.
+Managing workshops across multiple states and departments requires more than just a calendar—it requires a robust workflow. This platform provides:
+- **Scalability:** Handle hundreds of instructors and institutional coordinators simultaneously.
+- **Trust:** A role-based verification system ensures only qualified instructors conduct sessions.
+- **Insights:** Data-driven dashboards showing regional trends and workshop demographics.
 
 ---
 
-## 🛠️ Tech Stack
+## 🚀 Key Features
 
-| Category | Technology |
+### 🏢 Institutional Coordinators
+*   **Intelligent Proposals:** Propose custom workshop dates based on institutional availability.
+*   **Instructor Discovery:** Browse available workshops posted by subject matter experts.
+*   **Profile Management:** Build institutional reputation through history and feedback.
+*   **Communication:** Direct commenting system on workshop instances for logistical clarity.
+
+### 👨‍🏫 Subject Matter Instructors
+*   **Course Catalog:** Create "Workshop Types" with specific durations, prerequisites, and materials.
+*   **Request Management:** Intuitive **Accept/Reject/Postpone** dashboard for handling coordinator proposals.
+*   **Impact Tracking:** Stats on workshop counts and demographic reach.
+*   **Resource Distribution:** Upload schedules and instructional materials directly to workshop types.
+
+### 🌐 Global Features
+*   **Interactive Maps:** Visualise workshop distribution across India using geospatial data.
+*   **Testimonial Engine:** Showcase impact through participant and coordinator feedback.
+*   **Email Verification:** Secure activation flow for new users.
+
+---
+
+## 🏗️ Architecture
+
+The project is built on a modular Django architecture, ensuring separation of concerns:
+
+| App | Responsibility |
 | :--- | :--- |
-| **Backend** | Python / Django (v3.0.7) |
-| **Styling** | Tailwind CSS 3.0 (with "Corporate Trust" design system) |
-| **Database** | SQLite3 (Default) / Compatible with PostgreSQL/MySQL |
-| **Typography** | Plus Jakarta Sans |
-| **Data Viz** | Pandas / Plotly / Matplotlib (Integrated) |
+| **`workshop_app`** | Core engine: User profiles, Workshop logic, Commenting, and Banner management. |
+| **`statistics_app`** | Data processing: Generates monthly trends and regional heatmaps. |
+| **`workshop_portal`** | Project configuration, routing, and global settings. |
+| **`teams`** | Management of internal organizational roles and permissions. |
+| **`cms`** | Content management for informational pages and dynamic components. |
 
 ---
 
-## 🚀 Getting Started
+## 🎨 Design System: "Atmospheric Trust"
 
-Follow these steps to deploy the application on your local machine:
+We have transitioned from legacy Bootstrap to a custom-built **Tailwind CSS 3.0** design system optimized for professional credibility.
 
-### 1️⃣ Prerequisites
-- Python 3.x installed.
-- Git installed.
+### 💠 Visual Tokens
+- **Palette:** `Indigo-600` (Primary), `Violet-600` (Secondary), and `Emerald-500` (Accent).
+- **Aesthetics:** High-level glassmorphism, glowing button cues, and subtle card shadows (`box-shadow: soft`).
+- **Typography:** **Plus Jakarta Sans**—a modern geometric sans-serif for maximum readability.
+- **Motion:** Implementation of `fade-in-up` keyframes for page-reveal animations and interactive hover scaling.
 
-### 2️⃣ Installation & Setup
+---
+
+## ⚙️ Installation & Getting Started
+
+### 1️⃣ Environment Preparation
+Ensure you have **Python 3.8+** and **Node.js** (for Tailwind processing) installed.
 
 ```bash
-# Clone the repository
+# Clone and Enter
 git clone https://github.com/FOSSEE/workshop_booking.git
 cd workshop_booking
 
-# Set up virtual environment
+# Virtual Environment Setup
 python -m venv venv
-# On Windows use: venv\Scripts\activate
-source venv/bin/activate  
+# Windows: venv\Scripts\activate | Unix: source venv/bin/activate
+source venv/bin/activate
 
-# Install dependencies
+# Core Dependencies
 pip install -r requirements.txt
